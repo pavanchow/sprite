@@ -2,11 +2,623 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>sprite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprite — a tiny embeddable scripting language in Rust</title>
+<meta name="description" content="Sprite is a tiny embeddable scripting language in Rust: a lexer, parser, and tree-walking interpreter you can read in a sitting, with a clean eval API.">
+<meta name="author" content="Pavan Nallamothu">
+<link rel="canonical" href="https://pavanchow.github.io/sprite/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sprite — a tiny embeddable scripting language in Rust">
+<meta property="og:description" content="A tiny embeddable scripting language in Rust: lexer, parser, and tree-walking interpreter, with a clean eval API. By Pavan Nallamothu.">
+<meta property="og:url" content="https://pavanchow.github.io/sprite/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sprite — a tiny embeddable scripting language in Rust">
+<meta name="twitter:description" content="A tiny embeddable scripting language in Rust you can read in a sitting.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Sprite",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cross-platform",
+  "description": "Sprite is a tiny embeddable scripting language in Rust with a lexer, parser, and tree-walking interpreter, and a clean eval API for embedding in Rust programs.",
+  "url": "https://pavanchow.github.io/sprite/",
+  "author": {
+    "@type": "Person",
+    "name": "Pavan Nallamothu"
+  },
+  "programmingLanguage": "Rust",
+  "codeRepository": "https://github.com/pavanchow/sprite",
+  "license": "https://opensource.org/licenses/MIT"
+}
+</script>
+
+<style>
+  :root {
+    --accent: #d9480f;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #ececec;
+    --bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  header.hero {
+    padding: 120px 0 80px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: 56px;
+    line-height: 1.08;
+    margin: 0 0 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .lede {
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 0 auto 36px;
+    line-height: 1.55;
+  }
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .btn.primary {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn:hover {
+    opacity: 0.75;
+  }
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  section:last-of-type {
+    border-bottom: none;
+  }
+  h2 {
+    font-size: 32px;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .section-lede {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 620px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 26px;
+  }
+  .card h3 {
+    margin: 0 0 10px;
+    font-size: 17px;
+  }
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  pre {
+    background: #fafafa;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 24px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .comment { color: #8a8a8a; }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .two-col h3 {
+    font-size: 16px;
+    margin: 0 0 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+  }
+  #playground textarea {
+    width: 100%;
+    min-height: 160px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  #playground .run-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 0;
+  }
+  #playground button {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #playground button:hover {
+    opacity: 0.85;
+  }
+  #output {
+    background: #fafafa;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 14px;
+    min-height: 60px;
+    white-space: pre-wrap;
+    color: var(--ink);
+  }
+  .note {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+  footer {
+    padding: 48px 0 80px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer a { color: var(--ink); }
+  @media (max-width: 720px) {
+    h1 { font-size: 38px; }
+    .cards { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    header.hero { padding: 80px 0 56px; }
+  }
+</style>
 </head>
 <body>
-<h1>sprite</h1>
-<p>Site coming soon.</p>
-<p><a href="https://github.com/pavanchow/sprite">View repository</a></p>
+<noscript>
+  <div class="wrap">
+    <h1>Sprite</h1>
+    <p>A tiny, embeddable scripting language in Rust. Lexer, parser, and tree-walking
+    interpreter, with a clean eval API. Source and docs at
+    <a href="https://github.com/pavanchow/sprite">github.com/pavanchow/sprite</a>.
+    By Pavan Nallamothu.</p>
+  </div>
+</noscript>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Rust · scripting language</div>
+    <h1>Sprite</h1>
+    <p class="lede">A tiny, embeddable scripting language in Rust you can read in a
+    sitting. Lexer, parser, tree-walking interpreter, one <code>eval</code> call
+    to drop into any Rust program.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="https://github.com/pavanchow/sprite">View on GitHub</a>
+      <a class="btn" href="#tour">Language tour</a>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Small on purpose</h2>
+    <p class="section-lede">Lua and Rhai are excellent and much more capable. Sprite
+    is the other end of the spectrum: a scripting language in Rust small enough
+    that reading the whole interpreter is a reasonable way to spend an afternoon.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>Read in a sitting</h3>
+        <p>Lexer, parser, and interpreter are a few hundred lines each. No bytecode
+        compiler, no VM, no parser generator.</p>
+      </div>
+      <div class="card">
+        <h3>One eval call</h3>
+        <p><code>sprite::eval(source)</code> returns a <code>Value</code>. A
+        <code>Session</code> keeps state alive across calls for a REPL or a
+        long-lived embedding.</p>
+      </div>
+      <div class="card">
+        <h3>Never panics on bad input</h3>
+        <p>Lex, parse, and runtime errors are all typed results. Deeply nested or
+        hostile input returns an error, not a crash.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tour">
+  <div class="wrap">
+    <h2>Language tour</h2>
+    <p class="section-lede">Variables, arithmetic, comparisons, booleans, control
+    flow, functions, closures, and string concatenation.</p>
+    <pre><span class="comment"># variables and arithmetic</span>
+let x = 2 + 3 * 4
+print(x)                    <span class="comment"># 14</span>
+
+<span class="comment"># recursive functions</span>
+fn fact(n) {
+    if n <= 1 {
+        return 1
+    }
+    return n * fact(n - 1)
+}
+print(fact(5))               <span class="comment"># 120</span>
+
+<span class="comment"># while loops</span>
+let i = 1
+let sum = 0
+while i <= 10 {
+    sum = sum + i
+    i = i + 1
+}
+print(sum)                    <span class="comment"># 55</span>
+
+<span class="comment"># closures</span>
+fn make_counter() {
+    let count = 0
+    fn increment() {
+        count = count + 1
+        return count
+    }
+    return increment
+}
+let counter = make_counter()
+print(counter())              <span class="comment"># 1</span>
+print(counter())              <span class="comment"># 2</span></pre>
+  </div>
+</section>
+
+<section id="embed">
+  <div class="wrap">
+    <h2>Embedding</h2>
+    <p class="section-lede">A clean API for dropping a scripting layer into any
+    Rust program.</p>
+    <div class="two-col">
+      <div>
+        <h3>One-shot</h3>
+        <pre>let value = sprite::eval(
+    "2 + 3 * 4"
+).unwrap();
+
+assert_eq!(
+    value.to_string(),
+    "14"
+);</pre>
+      </div>
+      <div>
+        <h3>Persistent session</h3>
+        <pre>let mut s = sprite::Session::new();
+s.run("let score = 0").unwrap();
+s.run("score = score + 10").unwrap();
+
+let v = s.run("score").unwrap();
+assert_eq!(v.to_string(), "10");</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="playground">
+  <div class="wrap">
+    <h2>Try a subset in your browser</h2>
+    <p class="section-lede">This box runs a small JavaScript reimplementation of
+    a subset of Sprite (expressions, <code>let</code>, <code>print</code>,
+    <code>if/else</code>, <code>while</code>) so you can poke at the syntax here.
+    The real interpreter is the Rust crate.</p>
+    <textarea id="src">let i = 1
+let sum = 0
+while i <= 10 {
+    sum = sum + i
+    i = i + 1
+}
+print(sum)
+print("done")</textarea>
+    <div class="run-row">
+      <button id="run">Run</button>
+      <span class="note">Runs entirely in your browser, nothing is sent anywhere.</span>
+    </div>
+    <div id="output">Click Run to evaluate the script above.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Sprite is MIT licensed. Source, issues, and the full design notes are on
+    <a href="https://github.com/pavanchow/sprite">GitHub</a>.</p>
+    <p>By Pavan Nallamothu.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  function tokenize(src) {
+    const tokens = [];
+    let i = 0;
+    const n = src.length;
+    const isDigit = c => c >= '0' && c <= '9';
+    const isAlpha = c => /[a-zA-Z_]/.test(c);
+    while (i < n) {
+      const c = src[i];
+      if (c === ' ' || c === '\t' || c === '\n' || c === '\r') { i++; continue; }
+      if (c === '#') { while (i < n && src[i] !== '\n') i++; continue; }
+      if (isDigit(c)) {
+        let j = i;
+        while (j < n && (isDigit(src[j]) || src[j] === '.')) j++;
+        tokens.push({ t: 'num', v: parseFloat(src.slice(i, j)) });
+        i = j;
+        continue;
+      }
+      if (c === '"') {
+        let j = i + 1, s = '';
+        while (j < n && src[j] !== '"') { s += src[j]; j++; }
+        tokens.push({ t: 'str', v: s });
+        i = j + 1;
+        continue;
+      }
+      if (isAlpha(c)) {
+        let j = i;
+        while (j < n && /[a-zA-Z0-9_]/.test(src[j])) j++;
+        const word = src.slice(i, j);
+        const kw = ['let', 'if', 'else', 'while', 'true', 'false', 'nil', 'and', 'or', 'not', 'print'];
+        tokens.push({ t: kw.includes(word) ? word : 'ident', v: word });
+        i = j;
+        continue;
+      }
+      const two = src.slice(i, i + 2);
+      if (['==', '!=', '<=', '>='].includes(two)) { tokens.push({ t: two }); i += 2; continue; }
+      if ('+-*/%()<>{}=,'.includes(c)) { tokens.push({ t: c }); i++; continue; }
+      i++;
+    }
+    tokens.push({ t: 'eof' });
+    return tokens;
+  }
+
+  function parseAndRun(src, out) {
+    const tokens = tokenize(src);
+    let pos = 0;
+    const peek = () => tokens[pos];
+    const advance = () => tokens[pos++];
+    const vars = {};
+
+    function expr() { return assignment(); }
+
+    function assignment() {
+      const left = or_();
+      if (peek().t === '=') {
+        advance();
+        const value = assignment();
+        if (left.type === 'ident') return { type: 'assign', name: left.name, value };
+        throw new Error('invalid assignment target');
+      }
+      return left;
+    }
+    function or_() {
+      let e = and_();
+      while (peek().t === 'or') { advance(); e = { type: 'or', l: e, r: and_() }; }
+      return e;
+    }
+    function and_() {
+      let e = eq_();
+      while (peek().t === 'and') { advance(); e = { type: 'and', l: e, r: eq_() }; }
+      return e;
+    }
+    function eq_() {
+      let e = cmp_();
+      while (['==', '!='].includes(peek().t)) { const op = advance().t; e = { type: 'bin', op, l: e, r: cmp_() }; }
+      return e;
+    }
+    function cmp_() {
+      let e = term();
+      while (['<', '>', '<=', '>='].includes(peek().t)) { const op = advance().t; e = { type: 'bin', op, l: e, r: term() }; }
+      return e;
+    }
+    function term() {
+      let e = factor();
+      while (['+', '-'].includes(peek().t)) { const op = advance().t; e = { type: 'bin', op, l: e, r: factor() }; }
+      return e;
+    }
+    function factor() {
+      let e = unary();
+      while (['*', '/', '%'].includes(peek().t)) { const op = advance().t; e = { type: 'bin', op, l: e, r: unary() }; }
+      return e;
+    }
+    function unary() {
+      if (peek().t === '-') { advance(); return { type: 'neg', e: unary() }; }
+      if (peek().t === 'not') { advance(); return { type: 'not', e: unary() }; }
+      return callExpr();
+    }
+    function callExpr() {
+      let e = primary();
+      while (peek().t === '(') {
+        advance();
+        const args = [];
+        if (peek().t !== ')') {
+          args.push(expr());
+          while (peek().t === ',') { advance(); args.push(expr()); }
+        }
+        if (peek().t !== ')') throw new Error("expected ')'");
+        advance();
+        e = { type: 'call', callee: e, args };
+      }
+      return e;
+    }
+    function primary() {
+      const tok = advance();
+      if (tok.t === 'num') return { type: 'num', v: tok.v };
+      if (tok.t === 'str') return { type: 'str', v: tok.v };
+      if (tok.t === 'true') return { type: 'bool', v: true };
+      if (tok.t === 'false') return { type: 'bool', v: false };
+      if (tok.t === 'nil') return { type: 'nil' };
+      if (tok.t === 'ident' || tok.t === 'print') return { type: 'ident', name: tok.v || 'print' };
+      if (tok.t === '(') { const e = expr(); if (peek().t !== ')') throw new Error("expected ')'"); advance(); return e; }
+      throw new Error('unexpected token ' + tok.t);
+    }
+
+    function block() {
+      if (peek().t !== '{') throw new Error("expected '{'");
+      advance();
+      const stmts = [];
+      while (peek().t !== '}' && peek().t !== 'eof') stmts.push(statement());
+      if (peek().t !== '}') throw new Error("expected '}'");
+      advance();
+      return stmts;
+    }
+
+    function statement() {
+      if (peek().t === 'let') {
+        advance();
+        const name = advance().v;
+        if (peek().t !== '=') throw new Error("expected '='");
+        advance();
+        const e = expr();
+        return { type: 'let', name, e };
+      }
+      if (peek().t === 'if') {
+        advance();
+        const cond = expr();
+        const thenB = block();
+        let elseB = null;
+        if (peek().t === 'else') { advance(); elseB = peek().t === 'if' ? [statement()] : block(); }
+        return { type: 'if', cond, thenB, elseB };
+      }
+      if (peek().t === 'while') {
+        advance();
+        const cond = expr();
+        const body = block();
+        return { type: 'while', cond, body };
+      }
+      if (peek().t === '{') return { type: 'block', body: block() };
+      const e = expr();
+      return { type: 'exprstmt', e };
+    }
+
+    function truthy(v) { return !(v === false || v === null || v === undefined); }
+
+    function evalExpr(e) {
+      switch (e.type) {
+        case 'num': return e.v;
+        case 'str': return e.v;
+        case 'bool': return e.v;
+        case 'nil': return null;
+        case 'ident':
+          if (e.name === 'print') return '__print__';
+          if (!(e.name in vars)) throw new Error("undefined variable '" + e.name + "'");
+          return vars[e.name];
+        case 'neg': return -evalExpr(e.e);
+        case 'not': return !truthy(evalExpr(e.e));
+        case 'and': { const l = evalExpr(e.l); return truthy(l) ? evalExpr(e.r) : l; }
+        case 'or': { const l = evalExpr(e.l); return truthy(l) ? l : evalExpr(e.r); }
+        case 'assign': { const v = evalExpr(e.value); vars[e.name] = v; return v; }
+        case 'call': {
+          if (e.callee.type === 'ident' && e.callee.name === 'print') {
+            const parts = e.args.map(a => String(evalExpr(a)));
+            out.push(parts.join(' '));
+            return null;
+          }
+          throw new Error('unknown function call');
+        }
+        case 'bin': {
+          const l = evalExpr(e.l), r = evalExpr(e.r);
+          switch (e.op) {
+            case '+': return (typeof l === 'string' || typeof r === 'string') ? String(l) + String(r) : l + r;
+            case '-': return l - r;
+            case '*': return l * r;
+            case '/': return l / r;
+            case '%': return l % r;
+            case '==': return l === r;
+            case '!=': return l !== r;
+            case '<': return l < r;
+            case '>': return l > r;
+            case '<=': return l <= r;
+            case '>=': return l >= r;
+          }
+        }
+      }
+    }
+
+    function execStmt(s) {
+      switch (s.type) {
+        case 'let': vars[s.name] = evalExpr(s.e); return;
+        case 'exprstmt': evalExpr(s.e); return;
+        case 'if': if (truthy(evalExpr(s.cond))) s.thenB.forEach(execStmt); else if (s.elseB) s.elseB.forEach(execStmt); return;
+        case 'while': { let guard = 0; while (truthy(evalExpr(s.cond))) { s.body.forEach(execStmt); if (++guard > 100000) throw new Error('loop guard tripped'); } return; }
+        case 'block': s.body.forEach(execStmt); return;
+      }
+    }
+
+    while (peek().t !== 'eof') execStmt(statement());
+  }
+
+  document.getElementById('run').addEventListener('click', function () {
+    const src = document.getElementById('src').value;
+    const out = [];
+    const box = document.getElementById('output');
+    try {
+      parseAndRun(src, out);
+      box.textContent = out.length ? out.join('\n') : '(no output)';
+    } catch (err) {
+      box.textContent = 'error: ' + err.message;
+    }
+  });
+})();
+</script>
 </body>
 </html>
