@@ -36,246 +36,159 @@
 </script>
 
 <style>
-  :root {
-    --accent: #d9480f;
-    --ink: #1a1a1a;
-    --muted: #6b6b6b;
-    --line: #ececec;
-    --bg: #ffffff;
+  :root{
+    --accent:#0f766e;--accent-soft:#eafaf7;
+    --ink:#15161c;--muted:#6a6d78;--faint:#9a9dab;
+    --line:#ececed;--panel:#f7f7f9;--panel2:#fbfbfd;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"SF Mono",monospace;
   }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:#fff;color:var(--ink);
+    font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:0.92em;background:var(--panel);border-radius:4px;padding:0.1em 0.4em}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  nav .row{display:flex;justify-content:space-between;align-items:center;height:56px;max-width:1040px;margin:0 auto;padding:0 28px}
+  nav .brand{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:650;letter-spacing:-.01em}
+  nav .brand .gem{width:16px;height:16px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#5eead4,#0f766e)}
+  nav .links{display:flex;gap:26px;align-items:center}
+  nav .links a{color:var(--ink);font-size:14.5px}
+  @media(max-width:640px){nav .links a:not(.gh){display:none}}
+
+  .hero{padding:80px 0 40px;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:clamp(40px,7vw,68px);line-height:1.05;letter-spacing:-.035em;font-weight:680;margin:18px 0 0;text-wrap:balance}
+  .hero p.sub{max-width:620px;margin:24px auto 0;font-size:clamp(17px,2.1vw,21px);color:var(--muted)}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .btn{display:inline-block;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:600;border:1px solid var(--ink);color:var(--ink);transition:all .15s ease}
+  .btn:hover{opacity:.75;text-decoration:none}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .stage{max-width:900px;margin:44px auto 0;padding:0 28px}
+  .card{position:relative;background:linear-gradient(180deg,#fbfffe,#f2fbf9);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 #fff inset,0 18px 50px -30px rgba(15,118,110,.25);padding:28px}
+
+  section{padding:88px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+  h2{font-size:clamp(27px,4.2vw,40px);line-height:1.12;letter-spacing:-.025em;font-weight:660;text-align:center;max-width:760px;margin:0 auto}
+  .lead{max-width:620px;margin:20px auto 0;text-align:center;color:var(--muted);font-size:17px;line-height:1.6}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:960px;margin:48px auto 0}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}}
+  .cardbox{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .cardbox h3{font-size:17px;margin-bottom:10px}
+  .cardbox p{color:var(--muted);font-size:14.5px;line-height:1.55}
+
+  pre{background:#15161c;color:#ececf4;border-radius:14px;padding:22px 24px;font-family:var(--mono);font-size:13.5px;line-height:1.65;overflow-x:auto;max-width:720px;margin:40px auto 0}
+  pre .comment{color:#8a8d9a}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:960px;margin:44px auto 0}
+  @media(max-width:720px){.two-col{grid-template-columns:1fr}}
+  .two-col h3{font-size:12px;margin:0 0 12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}
+  .two-col pre{margin:0;max-width:none}
+
+  #playground textarea{
+    width:100%;min-height:160px;font-family:var(--mono);font-size:14px;
+    border:1px solid var(--line);border-radius:12px;padding:18px;resize:vertical;
+    line-height:1.6;background:#fff;color:var(--ink);
   }
-  .wrap {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 24px;
+  #playground .run-row{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:14px 0;flex-wrap:wrap}
+  #playground button{
+    background:var(--ink);color:#fff;border:none;border-radius:999px;padding:10px 22px;
+    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
   }
-  header.hero {
-    padding: 120px 0 80px;
-    text-align: center;
-    border-bottom: 1px solid var(--line);
+  #playground button:hover{opacity:.85}
+  #output{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;
+    font-family:var(--mono);font-size:14px;min-height:60px;white-space:pre-wrap;color:var(--ink);
   }
-  .eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 18px;
-  }
-  h1 {
-    font-size: 56px;
-    line-height: 1.08;
-    margin: 0 0 20px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .lede {
-    font-size: 20px;
-    color: var(--muted);
-    max-width: 620px;
-    margin: 0 auto 36px;
-    line-height: 1.55;
-  }
-  .cta-row {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn {
-    display: inline-block;
-    padding: 13px 26px;
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 600;
-    border: 1px solid var(--ink);
-    color: var(--ink);
-    transition: all 0.15s ease;
-  }
-  .btn.primary {
-    background: var(--ink);
-    color: #fff;
-  }
-  .btn:hover {
-    opacity: 0.75;
-  }
-  section {
-    padding: 72px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  section:last-of-type {
-    border-bottom: none;
-  }
-  h2 {
-    font-size: 32px;
-    margin: 0 0 16px;
-    letter-spacing: -0.01em;
-  }
-  .section-lede {
-    color: var(--muted);
-    font-size: 17px;
-    max-width: 620px;
-    line-height: 1.6;
-    margin-bottom: 40px;
-  }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  .card {
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 26px;
-  }
-  .card h3 {
-    margin: 0 0 10px;
-    font-size: 17px;
-  }
-  .card p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14.5px;
-    line-height: 1.55;
-  }
-  pre {
-    background: #fafafa;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 22px 24px;
-    overflow-x: auto;
-    font-size: 14px;
-    line-height: 1.6;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  }
-  .comment { color: #8a8a8a; }
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  .two-col h3 {
-    font-size: 16px;
-    margin: 0 0 12px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 12px;
-  }
-  #playground textarea {
-    width: 100%;
-    min-height: 160px;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 14px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px;
-    resize: vertical;
-    line-height: 1.6;
-  }
-  #playground .run-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 14px 0;
-  }
-  #playground button {
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 10px 22px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  #playground button:hover {
-    opacity: 0.85;
-  }
-  #output {
-    background: #fafafa;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 14px;
-    min-height: 60px;
-    white-space: pre-wrap;
-    color: var(--ink);
-  }
-  .note {
-    font-size: 12.5px;
-    color: var(--muted);
-    margin-top: 10px;
-  }
-  footer {
-    padding: 48px 0 80px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  footer a { color: var(--ink); }
-  @media (max-width: 720px) {
-    h1 { font-size: 38px; }
-    .cards { grid-template-columns: 1fr; }
-    .two-col { grid-template-columns: 1fr; }
-    header.hero { padding: 80px 0 56px; }
+  .note{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+
+  footer{padding:60px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted)}
+  footer .name{color:var(--ink);font-weight:600}
+  footer p+p{margin-top:10px}
+
+  @media(max-width:640px){
+    .hero{padding:56px 0 32px}
+    section{padding:64px 0}
+    .card{padding:18px}
   }
 </style>
 </head>
 <body>
 <noscript>
-  <div class="wrap">
-    <h1>Sprite</h1>
-    <p>A tiny, embeddable scripting language in Rust. Lexer, parser, and tree-walking
+  <div class="wrap" style="padding:40px 28px;color:#6a6d78">
+    Sprite is a tiny, embeddable scripting language in Rust. Lexer, parser, and tree-walking
     interpreter, with a clean eval API. Source and docs at
     <a href="https://github.com/pavanchow/sprite">github.com/pavanchow/sprite</a>.
-    By Pavan Nallamothu.</p>
+    By Pavan Nallamothu.
   </div>
 </noscript>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Rust · scripting language</div>
-    <h1>Sprite</h1>
-    <p class="lede">A tiny, embeddable scripting language in Rust you can read in a
-    sitting. Lexer, parser, tree-walking interpreter, one <code>eval</code> call
-    to drop into any Rust program.</p>
-    <div class="cta-row">
-      <a class="btn primary" href="https://github.com/pavanchow/sprite">View on GitHub</a>
-      <a class="btn" href="#tour">Language tour</a>
-    </div>
+<nav><div class="row">
+  <div class="brand"><span class="gem"></span>Sprite</div>
+  <div class="links">
+    <a href="#playground">Playground</a><a href="#tour">Language tour</a><a href="#embed">Embedding</a>
+    <a class="gh" href="https://github.com/pavanchow/sprite">GitHub</a>
   </div>
-</header>
+</div></nav>
+
+<div class="hero">
+  <p class="eyebrow">Rust · scripting language</p>
+  <h1>A language small<br>enough to read whole.</h1>
+  <p class="sub">Sprite is a tiny, embeddable scripting language in Rust. Lexer, parser,
+  tree-walking interpreter, one <code>eval</code> call to drop into any Rust program.
+  Try it below, right in your browser.</p>
+  <div class="cta-row">
+    <a class="btn primary" href="https://github.com/pavanchow/sprite">View on GitHub</a>
+    <a class="btn" href="#tour">Language tour</a>
+  </div>
+</div>
+
+<div class="stage" id="playground">
+  <div class="card">
+    <h2 style="text-align:left;max-width:none;margin-bottom:6px">Try a subset in your browser</h2>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:22px">This box runs a small JavaScript
+    reimplementation of a subset of Sprite (expressions, <code>let</code>, <code>print</code>,
+    <code>if/else</code>, <code>while</code>) so you can poke at the syntax here. The real
+    interpreter is the Rust crate.</p>
+    <textarea id="src">let i = 1
+let sum = 0
+while i <= 10 {
+    sum = sum + i
+    i = i + 1
+}
+print(sum)
+print("done")</textarea>
+    <div class="run-row">
+      <button id="run">Run</button>
+      <span class="note">runs entirely in your browser, nothing is sent anywhere</span>
+    </div>
+    <div id="output">Click Run to evaluate the script above.</div>
+  </div>
+</div>
 
 <section id="why">
   <div class="wrap">
     <h2>Small on purpose</h2>
-    <p class="section-lede">Lua and Rhai are excellent and much more capable. Sprite
-    is the other end of the spectrum: a scripting language in Rust small enough
-    that reading the whole interpreter is a reasonable way to spend an afternoon.</p>
+    <p class="lead">Lua and Rhai are excellent and much more capable. Sprite is the other
+    end of the spectrum: a scripting language in Rust small enough that reading the whole
+    interpreter is a reasonable way to spend an afternoon.</p>
     <div class="cards">
-      <div class="card">
+      <div class="cardbox">
         <h3>Read in a sitting</h3>
         <p>Lexer, parser, and interpreter are a few hundred lines each. No bytecode
         compiler, no VM, no parser generator.</p>
       </div>
-      <div class="card">
+      <div class="cardbox">
         <h3>One eval call</h3>
         <p><code>sprite::eval(source)</code> returns a <code>Value</code>. A
         <code>Session</code> keeps state alive across calls for a REPL or a
         long-lived embedding.</p>
       </div>
-      <div class="card">
+      <div class="cardbox">
         <h3>Never panics on bad input</h3>
         <p>Lex, parse, and runtime errors are all typed results. Deeply nested or
         hostile input returns an error, not a crash.</p>
@@ -287,8 +200,8 @@
 <section id="tour">
   <div class="wrap">
     <h2>Language tour</h2>
-    <p class="section-lede">Variables, arithmetic, comparisons, booleans, control
-    flow, functions, closures, and string concatenation.</p>
+    <p class="lead">Variables, arithmetic, comparisons, booleans, control flow, functions,
+    closures, and string concatenation.</p>
     <pre><span class="comment"># variables and arithmetic</span>
 let x = 2 + 3 * 4
 print(x)                    <span class="comment"># 14</span>
@@ -329,8 +242,7 @@ print(counter())              <span class="comment"># 2</span></pre>
 <section id="embed">
   <div class="wrap">
     <h2>Embedding</h2>
-    <p class="section-lede">A clean API for dropping a scripting layer into any
-    Rust program.</p>
+    <p class="lead">A clean API for dropping a scripting layer into any Rust program.</p>
     <div class="two-col">
       <div>
         <h3>One-shot</h3>
@@ -356,35 +268,10 @@ assert_eq!(v.to_string(), "10");</pre>
   </div>
 </section>
 
-<section id="playground">
-  <div class="wrap">
-    <h2>Try a subset in your browser</h2>
-    <p class="section-lede">This box runs a small JavaScript reimplementation of
-    a subset of Sprite (expressions, <code>let</code>, <code>print</code>,
-    <code>if/else</code>, <code>while</code>) so you can poke at the syntax here.
-    The real interpreter is the Rust crate.</p>
-    <textarea id="src">let i = 1
-let sum = 0
-while i <= 10 {
-    sum = sum + i
-    i = i + 1
-}
-print(sum)
-print("done")</textarea>
-    <div class="run-row">
-      <button id="run">Run</button>
-      <span class="note">Runs entirely in your browser, nothing is sent anywhere.</span>
-    </div>
-    <div id="output">Click Run to evaluate the script above.</div>
-  </div>
-</section>
-
 <footer>
-  <div class="wrap">
-    <p>Sprite is MIT licensed. Source, issues, and the full design notes are on
-    <a href="https://github.com/pavanchow/sprite">GitHub</a>.</p>
-    <p>By Pavan Nallamothu.</p>
-  </div>
+  <p>Sprite is MIT licensed. Source, issues, and the full design notes are on
+  <a href="https://github.com/pavanchow/sprite">GitHub</a>.</p>
+  <p>By <span class="name">Pavan Nallamothu</span>.</p>
 </footer>
 
 <script>
