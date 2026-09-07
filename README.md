@@ -1,3 +1,5 @@
+<img src="docs/logo.svg" alt="Sprite logo" width="96">
+
 # Sprite
 
 **A tiny, embeddable scripting language in Rust you can read in a sitting.**

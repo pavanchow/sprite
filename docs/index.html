@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sprite: a tiny embeddable scripting language in Rust</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <meta name="description" content="Sprite is a tiny embeddable scripting language in Rust: a lexer, parser, and tree-walking interpreter you can read in a sitting, with a clean eval API.">
 <meta name="author" content="Pavan Nallamothu (pavanchow)">
 <link rel="canonical" href="https://pavanchow.github.io/sprite/">
@@ -140,6 +141,7 @@
 </div></nav>
 
 <div class="hero">
+  <img src="logo.svg" alt="Sprite logo" width="72" height="72">
   <p class="eyebrow">Rust · scripting language</p>
   <h1>A language small<br>enough to read whole.</h1>
   <p class="sub">Sprite is a tiny, embeddable scripting language in Rust. Lexer, parser,
@@ -150,6 +152,18 @@
     <a class="btn" href="#tour">Language tour</a>
   </div>
 </div>
+
+<details style="max-width:900px;margin:26px auto 0;padding:0 28px">
+  <summary style="cursor:pointer;font-weight:600;font-size:15px">How to use this playground</summary>
+  <div style="margin-top:12px;color:#7c8492;font-size:15px;line-height:1.6">
+    Type or edit a script in the box below and press <b>Run</b> to execute it in your browser.
+    <ul style="margin:10px 0 0;padding-left:20px">
+      <li><b>Edit the code:</b> the box understands <code>let</code>, <code>print</code>, <code>if/else</code>, <code>while</code>, and arithmetic.</li>
+      <li><b>Run:</b> output prints below; nothing is sent anywhere.</li>
+      <li>This is a small JavaScript subset of Sprite for the demo. The full lexer, parser, and interpreter are the Rust crate.</li>
+    </ul>
+  </div>
+</details>
 
 <div class="stage" id="playground">
   <div class="card">

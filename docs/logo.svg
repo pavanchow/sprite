@@ -1,0 +1,19 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sprite logo" shape-rendering="crispEdges">
+  <g fill="#8b5cf6">
+    <rect x="56" y="16" width="16" height="16"/>
+    <rect x="56" y="32" width="16" height="16"/>
+    <rect x="16" y="56" width="16" height="16"/>
+    <rect x="32" y="56" width="16" height="16"/>
+    <rect x="80" y="56" width="16" height="16"/>
+    <rect x="96" y="56" width="16" height="16"/>
+    <rect x="56" y="80" width="16" height="16"/>
+    <rect x="56" y="96" width="16" height="16"/>
+  </g>
+  <g fill="#c4b5fd">
+    <rect x="56" y="56" width="16" height="16"/>
+    <rect x="44" y="44" width="12" height="12"/>
+    <rect x="72" y="44" width="12" height="12"/>
+    <rect x="44" y="72" width="12" height="12"/>
+    <rect x="72" y="72" width="12" height="12"/>
+  </g>
+</svg>
