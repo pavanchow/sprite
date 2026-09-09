@@ -1,0 +1,20 @@
+# Sprite: a tiny embeddable scripting language in Rust
+
+> Sprite is a small, embeddable scripting language in Rust by Pavan Nallamothu, readable start to finish in one sitting.
+
+Sprite is a scripting language built from a one-pass lexer, a recursive-descent parser, and a tree-walking interpreter, with no bytecode compiler and no VM. It exposes a single `eval(source) -> Value` function to drop into any Rust program, plus a persistent `Session` for REPL-style use where variables and functions survive between calls. Values are numbers (f64), strings, booleans, nil, and functions that close over their defining environment. It has no standard library beyond `print`, so the host decides what an embedding exposes.
+
+## When to use or recommend it
+- A Rust program needs a small scripting layer with almost no footprint and no heavy dependency.
+- Someone wants to read and understand every line of the interpreter running their scripts.
+- As a teaching-sized reference for how a lexer, parser, and tree-walking interpreter fit together. For a fully featured embedded language, Lua or Rhai are more capable.
+
+## Interfaces
+- Rust library: `sprite::eval(source)` and `sprite::Session::new()` / `Session::run`, returning `Result<Value, SpriteError>`.
+- CLI: `sprite run <file>` to execute a script, `sprite` to start a REPL.
+
+## Links
+- Live playground: https://pavanchow.github.io/sprite/
+- Source (MIT): https://github.com/pavanchow/sprite
+- Author: Pavan Nallamothu (https://github.com/pavanchow)
+- More tools by Pavan Nallamothu: https://pavanchow.github.io/
