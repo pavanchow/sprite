@@ -3,39 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sprite: a tiny embeddable scripting language in Rust you can read in a sitting</title>
+<title>Sprite: embeddable scripting language in Rust | Pavan Nallamothu</title>
 <link rel="icon" type="image/svg+xml" href="logo.svg">
-<meta name="description" content="Sprite is a tiny, embeddable scripting language in Rust: a one-pass lexer, a recursive-descent parser, and a tree-walking interpreter, small enough to read start to finish, with a single eval(source) API to drop into any Rust program. By Pavan Nallamothu (pavanchow).">
-<meta name="author" content="Pavan Nallamothu (pavanchow)">
-<meta name="keywords" content="embeddable scripting language, Rust scripting language, tree-walking interpreter, recursive descent parser, lexer, eval, closures, tiny interpreter, Lua alternative, Rhai alternative, Pavan Nallamothu, pavanchow">
+<meta name="description" content="Sprite is an embeddable scripting language in Rust: a one-pass lexer, recursive-descent parser, and tree-walking interpreter with a clean eval API to drop into any Rust program. By Pavan Nallamothu.">
+<meta name="keywords" content="Sprite, embeddable scripting language, scripting language in Rust, Rust interpreter, tree-walking interpreter, recursive descent parser, lexer, eval API, embed scripting in Rust, tiny interpreter, Lua alternative, Rhai alternative, scripting language from scratch, Pavan Nallamothu, pavanchow">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Pavan Nallamothu">
+<link rel="author" href="https://github.com/pavanchow">
 <link rel="canonical" href="https://pavanchow.github.io/sprite/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Sprite: a tiny embeddable scripting language in Rust">
-<meta property="og:description" content="A tiny embeddable scripting language in Rust: lexer, parser, and tree-walking interpreter you can read in a sitting, with a clean eval API. By Pavan Nallamothu (pavanchow).">
+<meta property="og:site_name" content="Pavan Nallamothu">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Sprite: embeddable scripting language in Rust">
+<meta property="og:description" content="An embeddable scripting language in Rust: lexer, parser, and tree-walking interpreter you can read in a sitting, with a clean eval API. By Pavan Nallamothu.">
 <meta property="og:url" content="https://pavanchow.github.io/sprite/">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sprite: a tiny embeddable scripting language in Rust">
-<meta name="twitter:description" content="A tiny embeddable scripting language in Rust you can read in a sitting.">
+<meta property="og:image" content="https://pavanchow.github.io/sprite/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sprite by Pavan Nallamothu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sprite: embeddable scripting language in Rust">
+<meta name="twitter:description" content="An embeddable scripting language in Rust you can read in a sitting, with a clean eval API. By Pavan Nallamothu.">
+<meta name="twitter:image" content="https://pavanchow.github.io/sprite/og-image.png">
 
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Sprite",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Cross-platform",
-  "softwareVersion": "0.1.0",
-  "description": "Sprite is a tiny embeddable scripting language in Rust with a one-pass lexer, a recursive-descent parser, and a tree-walking interpreter, and a clean eval API for embedding in Rust programs.",
-  "url": "https://pavanchow.github.io/sprite/",
-  "author": {
-    "@type": "Person",
-    "name": "Pavan Nallamothu"
-  },
-  "programmingLanguage": "Rust",
-  "codeRepository": "https://github.com/pavanchow/sprite",
-  "license": "https://opensource.org/licenses/MIT"
-}
+{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://pavanchow.github.io/sprite/#software","name":"Sprite","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows","softwareVersion":"0.1.0","description":"Sprite is an embeddable scripting language in Rust with a one-pass lexer, a recursive-descent parser, and a tree-walking interpreter, and a clean eval API for embedding in Rust programs.","url":"https://pavanchow.github.io/sprite/","image":"https://pavanchow.github.io/sprite/og-image.png","programmingLanguage":"Rust","codeRepository":"https://github.com/pavanchow/sprite","license":"https://opensource.org/licenses/MIT","datePublished":"2026-08-21","author":{"@id":"https://github.com/pavanchow#person"},"publisher":{"@id":"https://github.com/pavanchow#person"},"keywords":"embeddable scripting language, scripting language in Rust, tree-walking interpreter, recursive descent parser, eval API, Pavan Nallamothu","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["One-pass lexer","Recursive-descent parser","Tree-walking interpreter","Single eval(source) API","Persistent Session for stateful evaluation","Parser depth bound against pathological input","Call-depth guard against runaway recursion"]},{"@type":"Person","@id":"https://github.com/pavanchow#person","name":"Pavan Nallamothu","alternateName":"pavanchow","url":"https://github.com/pavanchow","jobTitle":"Software Engineer and Security Researcher","knowsAbout":["Rust","interpreters","programming language design","parsers","lexers","scripting languages"],"sameAs":["https://github.com/pavanchow","https://hackerone.com/pavanchow"]},{"@type":"WebSite","@id":"https://pavanchow.github.io/sprite/#website","name":"Sprite by Pavan Nallamothu","url":"https://pavanchow.github.io/sprite/","author":{"@id":"https://github.com/pavanchow#person"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Pavan Nallamothu","item":"https://github.com/pavanchow"},{"@type":"ListItem","position":2,"name":"Sprite","item":"https://pavanchow.github.io/sprite/"}]},{"@type":"WebPage","url":"https://pavanchow.github.io/sprite/","name":"Sprite: embeddable scripting language in Rust | Pavan Nallamothu","isPartOf":{"@id":"https://pavanchow.github.io/sprite/#website"},"inLanguage":"en","author":{"@id":"https://github.com/pavanchow#person"},"about":{"@id":"https://pavanchow.github.io/sprite/#software"}}]}
 </script>
 
 <style>
@@ -146,10 +139,6 @@
     .card{padding:18px}
   }
 </style>
-<link rel="author" href="https://github.com/pavanchow">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Pavan Nallamothu","alternateName":"pavanchow","url":"https://github.com/pavanchow","sameAs":["https://github.com/pavanchow","https://hackerone.com/pavanchow"]}
-</script>
 </head>
 <body>
 <noscript>
@@ -356,6 +345,15 @@ cargo test</pre>
   <p>Sprite is MIT licensed. Source, issues, and the full design notes are on
   <a href="https://github.com/pavanchow/sprite">GitHub</a>.</p>
   <p>By <span class="name">Pavan Nallamothu</span>.</p>
+  <nav aria-label="More open-source tools by Pavan Nallamothu" style="margin-top:34px;font-size:14px;line-height:1.9">
+    <p style="font-weight:600;color:var(--ink);margin-bottom:8px">More open-source tools by Pavan Nallamothu</p>
+    <a href="https://pavanchow.github.io/kindling/">Kindling, a bytecode-compiled scripting language in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/esperanto/">Esperanto, a statically-typed language in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/alchemist/">Alchemist, a compiler and bytecode VM in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/mirage/">Mirage, a bytecode virtual machine in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/terrarium/">Terrarium, an untrusted-code sandbox in Rust</a> &middot;
+    <a href="https://github.com/pavanchow">All projects on GitHub</a>
+  </nav>
 </footer>
 
 <script>
